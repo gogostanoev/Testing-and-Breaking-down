@@ -76,6 +76,7 @@ const checkValid = (username, password) => {
     // Ako korisnikot nema vneseno password a ima username togash prekini go ovoj kod i izvesti go
     if(password === "") return console.log("Please enter password")
     userInfo(username, password);
+    // findUsers(username, password) mora da bide kreirana gore funkcijata za ovde da raboti
 }
 
 
@@ -84,3 +85,15 @@ checkValid("Freddie35", ""); // Please enter password
 checkValid("BlueLight", "password") // Login successful
 checkValid("JohnnyBoy", "fatcat") // Login unsuccessful
 checkValid() // You haven't provided any information
+
+
+const findUsers = (username, password) => {
+
+    const user = users.find(user => Object.values(user).includes(username) && Object.values(user).includes(password))
+    console.log(!user ? "Login unsuccessful" : "Login successful")
+}
+
+console.log("**** ****")
+findUsers("JohnnyBoy", "otorinolaringologija");
+findUsers("Freddie35", "stupid");
+findUsers()
