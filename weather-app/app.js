@@ -49,8 +49,6 @@ function getWeatherInfo(city){
 
 
 
-// "Bug" => Whenever I don't have anything inside the input and click on the Search button, the Weather forecast from below gets displayed.
-// FIX IT WHEN YOU OPEN YOUR CODE
 searchButton.addEventListener("click", () => {
   hourlyData.innerHTML = "";
 
