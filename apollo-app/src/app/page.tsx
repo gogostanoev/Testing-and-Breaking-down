@@ -1,23 +1,40 @@
-"use client"
-import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
-import { DisplayFilms } from "./components/DisplayFilms/DisplayFilms";
+"use client";
+import { ApolloLink, HttpLink } from "@apollo/client";
+import {
+  ApolloNextAppProvider,
+  NextSSRApolloClient,
+  NextSSRInMemoryCache,
+  SSRMultipartLink,
+} from "@apollo/experimental-nextjs-app-support/ssr";
 
-const client = new ApolloClient({
-  uri: "https://swapi-graphql.netlify.app/.netlify/functions/index",
-  cache: new InMemoryCache()
-})
+function client() {
+  const httpLink = new HttpLink({
+    uri: "https://rickandmortyapi.com/graphql",
+    fetchOptions: { cache: "no-store" },
+  });
 
-// const client = () => {
-//   const httpLink = new HttpLink({
-//     uri: "https://swapi-graphql.netlify.app/.netlify/functions/index",
-//     fetchOptions: { cache: "no store" }
-//   })
-// }
+  return new NextSSRApolloClient({
+    cache: new NextSSRInMemoryCache(),
+    link:
+      typeof window === "undefined"
+        ? ApolloLink.from([
+          new SSRMultipartLink({
+            stripDefer: true,
+          }),
+          httpLink,
+        ])
+        : httpLink,
+  });
+}
 
-export default function Home() {
+export default function Wrapper({ children }: React.PropsWithChildren) {
   return (
-    <ApolloProvider client={client}>
-      <DisplayFilms />
-    </ApolloProvider>
+    <div className="app-container">
+
+      <div className="background-container"></div>
+      <ApolloNextAppProvider makeClient={client}>
+        {children}
+      </ApolloNextAppProvider>
+    </div>
   );
 }
